@@ -72,15 +72,22 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
   // Reveal state for card if display mode is 'symbol_then_reveal' or manual reveal
   const [isManuallyRevealed, setIsManuallyRevealed] = useState<boolean>(false);
 
-  // References to handle timeouts, audio signals, animation frames
+  // References to keep mutable values fresh inside timers and avoid stale closures
+  const settingsRef = useRef<DrillSettings>(settings);
+  settingsRef.current = settings;
+
+  const queueRef = useRef<string[]>([]);
+  const currentIndexRef = useRef<number>(0);
+  const phaseRef = useRef<DrillPhase>('idle');
+  const isPausedRef = useRef<boolean>(false);
+  const repetitionCountRef = useRef<number>(0);
+
   const abortControllerRef = useRef<AbortController | null>(null);
   const timerFrameRef = useRef<number | null>(null);
   const postPauseTimeoutRef = useRef<number | null>(null);
-  const promptStartTimeRef = useRef<number>(0);
-  const isTransitioningRef = useRef<boolean>(false);
 
-  // Current active sound object
-  const currentSoundId = queue[queueIndex] || pool[0]?.id || 'sheep';
+  // Current active sound object for rendering
+  const currentSoundId = queue[queueIndex] || queueRef.current[currentIndexRef.current] || pool[0]?.id || 'sheep';
   const currentSound = SOUNDS_BY_ID.get(currentSoundId) || pool[0] || ALL_SOUNDS[0];
 
   // Helper to shuffle an array (Fisher-Yates)
@@ -93,27 +100,7 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
     return arr;
   }, []);
 
-  // Initialize or replenish queue when pool changes
-  useEffect(() => {
-    if (pool.length === 0) return;
-    const ids = pool.map((s) => s.id);
-    const initialQueue = settings.shuffle ? shuffleArray(ids) : ids;
-    setQueue(initialQueue);
-    setQueueIndex(0);
-  }, [pool, settings.shuffle, shuffleArray]);
-
-  // Session timer ticker
-  useEffect(() => {
-    if (!sessionStartTime || isPaused || phase === 'idle' || phase === 'completed') {
-      return;
-    }
-    const interval = setInterval(() => {
-      setElapsedSeconds(Math.floor((Date.now() - sessionStartTime) / 1000));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [sessionStartTime, isPaused, phase]);
-
-  // Clean up all pending timers and audio on unmount
+  // Clean up all pending timers, animation frames, and active audio
   const stopAllTimersAndAudio = useCallback(() => {
     if (timerFrameRef.current !== null) {
       cancelAnimationFrame(timerFrameRef.current);
@@ -130,84 +117,101 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
     audioManager.stopAll();
   }, []);
 
+  // Initialize or replenish queue when pool changes
+  useEffect(() => {
+    if (pool.length === 0) return;
+    stopAllTimersAndAudio();
+
+    const ids = pool.map((s) => s.id);
+    const initialQueue = settings.shuffle ? shuffleArray(ids) : ids;
+
+    queueRef.current = initialQueue;
+    currentIndexRef.current = 0;
+    setQueue(initialQueue);
+    setQueueIndex(0);
+
+    // If was already playing, restart with new pool
+    if (phaseRef.current === 'prompt' || phaseRef.current === 'system_speak' || phaseRef.current === 'post_pause') {
+      startPromptPhase(initialQueue[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool, settings.shuffle, shuffleArray]);
+
+  // Session timer ticker
+  useEffect(() => {
+    if (!sessionStartTime || isPaused || phase === 'idle' || phase === 'completed') {
+      return;
+    }
+    const interval = setInterval(() => {
+      setElapsedSeconds(Math.floor((Date.now() - sessionStartTime) / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [sessionStartTime, isPaused, phase]);
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       stopAllTimersAndAudio();
     };
   }, [stopAllTimersAndAudio]);
 
-  // Step 2 & 3: Play system audio and handle post-pause
+  // Step 2 & 3: Play system audio and handle post-pause auto-advance
   const playSystemAudioAndAdvance = useCallback(
     async (soundId: string) => {
       stopAllTimersAndAudio();
+      phaseRef.current = 'system_speak';
       setPhase('system_speak');
+
       const controller = new AbortController();
       abortControllerRef.current = controller;
 
       try {
         await audioManager.playDrillPhoneme(
           soundId,
-          settings.voiceMode,
-          settings.playWordToo,
+          settingsRef.current.voiceMode,
+          settingsRef.current.playWordToo,
           controller.signal
         );
 
         if (controller.signal.aborted) return;
 
         // Sound played! Count this repetition
-        setRepetitionCount((prev) => {
-          const nextCount = prev + 1;
-          // Check if target reached
-          if (
-            settings.targetRepetitions !== null &&
-            settings.targetRepetitions > 0 &&
-            nextCount >= settings.targetRepetitions
-          ) {
-            setPhase('completed');
-            setIsSessionCompleteModalOpen(true);
-            try {
-              confetti({
-                particleCount: 80,
-                spread: 70,
-                origin: { y: 0.6 }
-              });
-            } catch {}
-            return nextCount;
-          }
-          return nextCount;
-        });
+        const nextRepCount = repetitionCountRef.current + 1;
+        repetitionCountRef.current = nextRepCount;
+        setRepetitionCount(nextRepCount);
 
-        // If target reached, stop here
-        if (
-          settings.targetRepetitions !== null &&
-          settings.targetRepetitions > 0 &&
-          repetitionCount + 1 >= settings.targetRepetitions
-        ) {
+        // Check if target repetitions reached
+        const target = settingsRef.current.targetRepetitions;
+        if (target !== null && target > 0 && nextRepCount >= target) {
+          phaseRef.current = 'completed';
+          setPhase('completed');
+          setIsSessionCompleteModalOpen(true);
+          try {
+            confetti({
+              particleCount: 80,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+          } catch {}
           return;
         }
 
         // Post-pause phase
+        phaseRef.current = 'post_pause';
         setPhase('post_pause');
 
-        if (settings.autoAdvance) {
+        // Automatic advance to the NEXT sound!
+        if (settingsRef.current.autoAdvance && !isPausedRef.current) {
           postPauseTimeoutRef.current = window.setTimeout(() => {
             advanceToNextSound();
-          }, Math.max(50, settings.postDelayMs));
+          }, Math.max(50, settingsRef.current.postDelayMs));
         }
       } catch {
         // Aborted or interrupted
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      settings.voiceMode,
-      settings.playWordToo,
-      settings.targetRepetitions,
-      settings.postDelayMs,
-      settings.autoAdvance,
-      repetitionCount,
-      stopAllTimersAndAudio
-    ]
+    [stopAllTimersAndAudio]
   );
 
   // Step 1: Start prompt phase with smooth countdown animation
@@ -215,15 +219,18 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
     (soundId: string) => {
       stopAllTimersAndAudio();
       setIsManuallyRevealed(false);
+      phaseRef.current = 'prompt';
       setPhase('prompt');
-      setCountdownPercent(100);
-      setRemainingMs(settings.promptDelayMs);
 
-      const delay = Math.max(100, settings.promptDelayMs);
+      const delay = Math.max(100, settingsRef.current.promptDelayMs);
+      setCountdownPercent(100);
+      setRemainingMs(delay);
+
       const startTime = performance.now();
-      promptStartTimeRef.current = startTime;
 
       const tick = (now: number) => {
+        if (phaseRef.current !== 'prompt' || isPausedRef.current) return;
+
         const elapsed = now - startTime;
         const remaining = Math.max(0, delay - elapsed);
         const percent = Math.max(0, (remaining / delay) * 100);
@@ -241,56 +248,65 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
 
       timerFrameRef.current = requestAnimationFrame(tick);
     },
-    [settings.promptDelayMs, playSystemAudioAndAdvance, stopAllTimersAndAudio]
+    [stopAllTimersAndAudio, playSystemAudioAndAdvance]
   );
 
-  // Advance to next sound
+  // Advance to NEXT, DIFFERENT sound
   const advanceToNextSound = useCallback(() => {
-    if (isTransitioningRef.current) return;
-    isTransitioningRef.current = true;
-
     stopAllTimersAndAudio();
 
-    setQueue((prevQueue) => {
-      const nextIndex = queueIndex + 1;
-      let updatedQueue = prevQueue;
+    const currentQueue = queueRef.current;
+    if (currentQueue.length === 0) return;
 
-      // If reached end of current queue, replenish with reshuffled sounds
-      if (nextIndex >= prevQueue.length) {
-        const poolIds = pool.map((s) => s.id);
-        const fresh = settings.shuffle ? shuffleArray(poolIds) : poolIds;
-        updatedQueue = [...prevQueue, ...fresh];
+    const currentId = currentQueue[currentIndexRef.current];
+    let nextIndex = currentIndexRef.current + 1;
+
+    // If reached end of current queue, replenish with fresh shuffled batch
+    if (nextIndex >= currentQueue.length) {
+      const poolIds = pool.map((s) => s.id);
+      const freshBatch = settingsRef.current.shuffle ? shuffleArray(poolIds) : [...poolIds];
+
+      // Ensure first sound of next batch is DIFFERENT from the last sound
+      if (freshBatch.length > 1 && freshBatch[0] === currentId) {
+        const swapIdx = Math.floor(Math.random() * (freshBatch.length - 1)) + 1;
+        const temp = freshBatch[0];
+        freshBatch[0] = freshBatch[swapIdx];
+        freshBatch[swapIdx] = temp;
       }
 
-      setQueueIndex(nextIndex);
-      const nextSoundId = updatedQueue[nextIndex] || updatedQueue[0];
+      const updatedQueue = [...currentQueue, ...freshBatch];
+      queueRef.current = updatedQueue;
+      setQueue(updatedQueue);
+    }
 
-      setTimeout(() => {
-        isTransitioningRef.current = false;
-        startPromptPhase(nextSoundId);
-      }, 30);
+    currentIndexRef.current = nextIndex;
+    setQueueIndex(nextIndex);
 
-      return updatedQueue;
-    });
-  }, [queueIndex, pool, settings.shuffle, shuffleArray, stopAllTimersAndAudio, startPromptPhase]);
+    const nextSoundId = queueRef.current[nextIndex];
+    startPromptPhase(nextSoundId);
+  }, [pool, shuffleArray, stopAllTimersAndAudio, startPromptPhase]);
 
   // Step back to previous sound
   const stepToPreviousSound = useCallback(() => {
-    if (queueIndex <= 0) return;
+    if (currentIndexRef.current <= 0) return;
     stopAllTimersAndAudio();
-    const prevIndex = queueIndex - 1;
+
+    const prevIndex = currentIndexRef.current - 1;
+    currentIndexRef.current = prevIndex;
     setQueueIndex(prevIndex);
-    const prevSoundId = queue[prevIndex];
+
+    const prevSoundId = queueRef.current[prevIndex];
     if (prevSoundId) {
       startPromptPhase(prevSoundId);
     }
-  }, [queueIndex, queue, stopAllTimersAndAudio, startPromptPhase]);
+  }, [stopAllTimersAndAudio, startPromptPhase]);
 
   // Replay current sound
   const replayCurrentSound = useCallback(() => {
     stopAllTimersAndAudio();
-    playSystemAudioAndAdvance(currentSoundId);
-  }, [currentSoundId, playSystemAudioAndAdvance, stopAllTimersAndAudio]);
+    const currentId = queueRef.current[currentIndexRef.current] || pool[0]?.id || 'sheep';
+    playSystemAudioAndAdvance(currentId);
+  }, [pool, stopAllTimersAndAudio, playSystemAudioAndAdvance]);
 
   // Start trainer session
   const startTrainer = useCallback(() => {
@@ -298,44 +314,43 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
     if (!sessionStartTime) {
       setSessionStartTime(Date.now());
     }
+    isPausedRef.current = false;
     setIsPaused(false);
-    startPromptPhase(currentSoundId);
-  }, [sessionStartTime, currentSoundId, startPromptPhase]);
+
+    const activeId = queueRef.current[currentIndexRef.current] || pool[0]?.id || 'sheep';
+    startPromptPhase(activeId);
+  }, [sessionStartTime, pool, startPromptPhase]);
 
   // Pause or Resume
   const togglePause = useCallback(() => {
-    if (phase === 'idle') {
+    if (phaseRef.current === 'idle') {
       startTrainer();
       return;
     }
 
-    if (isPaused) {
+    if (isPausedRef.current) {
       // Resume
+      isPausedRef.current = false;
       setIsPaused(false);
       audioManager.ensureContext();
-      if (phase === 'prompt') {
-        startPromptPhase(currentSoundId);
-      } else if (phase === 'system_speak' || phase === 'post_pause') {
-        advanceToNextSound();
-      } else {
-        startPromptPhase(currentSoundId);
-      }
+
+      const activeId = queueRef.current[currentIndexRef.current] || pool[0]?.id || 'sheep';
+      startPromptPhase(activeId);
     } else {
       // Pause
+      isPausedRef.current = true;
       setIsPaused(true);
+      phaseRef.current = 'paused';
       setPhase('paused');
       stopAllTimersAndAudio();
     }
-  }, [phase, isPaused, startTrainer, startPromptPhase, currentSoundId, advanceToNextSound, stopAllTimersAndAudio]);
+  }, [startTrainer, startPromptPhase, pool, stopAllTimersAndAudio]);
 
   // Keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is in an input or modal
       const target = e.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA') {
-        return;
-      }
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(target.tagName)) return;
 
       if (e.code === 'Space') {
         e.preventDefault();
@@ -346,10 +361,10 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
       } else if (e.code === 'ArrowLeft') {
         e.preventDefault();
         stepToPreviousSound();
-      } else if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') {
+      } else if (e.key === 'r' || e.key === 'R') {
         e.preventDefault();
         replayCurrentSound();
-      } else if (e.key === 'a' || e.key === 'A' || e.key === 'ф' || e.key === 'Ф') {
+      } else if (e.key === 'a' || e.key === 'A') {
         e.preventDefault();
         onOpenArticulation(currentSound);
       }
@@ -363,18 +378,18 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
   const categoryInfo = useMemo(() => {
     if (currentSound.category === 'monophthong') {
       return {
-        label: 'Монофтонг (чистый гласный)',
+        label: 'Monophthong (Pure Vowel)',
         badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
       };
     }
     if (currentSound.category === 'diphthong') {
       return {
-        label: 'Дифтонг (двойной гласный)',
+        label: 'Diphthong (Gliding Vowel)',
         badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/30'
       };
     }
     return {
-      label: currentSound.categoryLabel || 'Согласный',
+      label: currentSound.categoryLabel || 'Consonant',
       badgeClass: 'bg-sky-500/20 text-sky-300 border-sky-500/30'
     };
   }, [currentSound]);
@@ -421,14 +436,14 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 max-w-full">
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mr-1 flex items-center gap-1">
             <Layers className="w-3.5 h-3.5 text-indigo-400" />
-            Группа:
+            Group:
           </span>
           {[
-            { id: 'all', label: 'Все (44)' },
-            { id: 'monophthongs', label: 'Гласные (12)' },
-            { id: 'diphthongs', label: 'Дифтонги (8)' },
-            { id: 'consonants', label: 'Согласные (24)' },
-            { id: 'vowels', label: 'Все гласные (20)' }
+            { id: 'all', label: 'All (44)' },
+            { id: 'monophthongs', label: 'Monophthongs (12)' },
+            { id: 'diphthongs', label: 'Diphthongs (8)' },
+            { id: 'consonants', label: 'Consonants (24)' },
+            { id: 'vowels', label: 'All Vowels (20)' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -450,23 +465,23 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
                 : 'bg-slate-700/60 text-slate-300 hover:bg-slate-700 hover:text-white'
             }`}
           >
-            Выборочно {settings.groupFilter === 'custom' ? `(${pool.length})` : '...'}
+            Custom {settings.groupFilter === 'custom' ? `(${pool.length})` : '...'}
           </button>
         </div>
 
         {/* Quick Voice Selector & Settings button */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-slate-900/70 border border-slate-700 rounded-xl p-1 text-xs">
+          <div className="flex items-center bg-slate-950/70 border border-slate-700 rounded-xl p-1 text-xs">
             <span className="text-slate-400 px-2 flex items-center gap-1 font-medium">
               <Volume2 className="w-3.5 h-3.5 text-indigo-400" />
-              Голос:
+              Voice:
             </span>
             {[
               { id: 'chart', label: 'Chart' },
               { id: 'alex', label: 'Alex' },
               { id: 'f1', label: 'F1' },
               { id: 'f2', label: 'F2' },
-              { id: 'mix', label: '🔀 Mix' }
+              { id: 'mix', label: 'Mix' }
             ].map((v) => (
               <button
                 key={v.id}
@@ -484,7 +499,7 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
 
           <button
             onClick={onOpenSettings}
-            title="Все настройки тренажёра (Esc)"
+            title="Drill Settings (Esc)"
             className="p-2 bg-slate-700/80 hover:bg-slate-600 text-slate-200 rounded-xl transition-all cursor-pointer hover:shadow"
           >
             <SettingsIcon className="w-4 h-4" />
@@ -500,13 +515,13 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
             <CheckCircle2 className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs text-slate-400 font-medium">Повторения</div>
+            <div className="text-xs text-slate-400 font-medium">Reps</div>
             <div className="text-lg font-bold text-white leading-tight">
               {repetitionCount}
               {settings.targetRepetitions ? (
                 <span className="text-xs text-slate-400 font-normal"> / {settings.targetRepetitions}</span>
               ) : (
-                <span className="text-xs text-indigo-400 font-normal"> (∞)</span>
+                <span className="text-xs text-indigo-400 font-normal"> (unlimited)</span>
               )}
             </div>
           </div>
@@ -518,9 +533,9 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
             <Gauge className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs text-slate-400 font-medium">Скорость</div>
+            <div className="text-xs text-slate-400 font-medium">Speed</div>
             <div className="text-lg font-bold text-white leading-tight">
-              {repsPerMin} <span className="text-xs text-slate-400 font-normal">фонем/мин</span>
+              {repsPerMin} <span className="text-xs text-slate-400 font-normal">sounds/min</span>
             </div>
           </div>
         </div>
@@ -531,7 +546,7 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
             <Clock className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs text-slate-400 font-medium">Время тренировки</div>
+            <div className="text-xs text-slate-400 font-medium">Session Time</div>
             <div className="text-lg font-bold text-white leading-tight font-mono">
               {formatTime(elapsedSeconds)}
             </div>
@@ -544,9 +559,9 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
             <Activity className="w-5 h-5" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-slate-400 font-medium">Пауза на произношение</div>
+            <div className="text-xs text-slate-400 font-medium">Prompt Delay</div>
             <div className="text-lg font-bold text-amber-300 leading-tight">
-              {(settings.promptDelayMs / 1000).toFixed(1)} сек
+              {(settings.promptDelayMs / 1000).toFixed(1)} sec
             </div>
           </div>
         </div>
@@ -565,16 +580,16 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => onOpenArticulation(currentSound)}
-              title="Показать схему артикуляции рта (клавиша A)"
+              title="Show mouth articulation diagram (Key A)"
               className="px-3 py-1.5 bg-slate-700/80 hover:bg-slate-600 text-slate-200 text-xs font-medium rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
-              Артикуляция
+              Articulation
             </button>
 
             <button
               onClick={() => setIsManuallyRevealed((prev) => !prev)}
-              title={isWordRevealed ? 'Скрыть слово' : 'Показать проверочное слово'}
+              title={isWordRevealed ? 'Hide example word' : 'Show example word'}
               className="p-1.5 bg-slate-700/80 hover:bg-slate-600 text-slate-200 text-xs font-medium rounded-xl flex items-center transition-colors cursor-pointer"
             >
               {isWordRevealed ? (
@@ -592,9 +607,9 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-2 text-indigo-300 font-semibold text-sm sm:text-base animate-pulse mb-2">
                 <Mic className="w-4 h-4 text-indigo-400" />
-                <span>Произнесите фонему вслух!</span>
+                <span>Say the phoneme aloud!</span>
                 <span className="font-mono text-xs px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">
-                  {(remainingMs / 1000).toFixed(1)}с
+                  {(remainingMs / 1000).toFixed(1)}s
                 </span>
               </div>
               {/* Animated Countdown Timer Bar */}
@@ -611,7 +626,7 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-2 text-emerald-300 font-semibold text-sm sm:text-base mb-2">
                 <Volume2 className="w-5 h-5 text-emerald-400 animate-bounce" />
-                <span>Система произносит:</span>
+                <span>System pronouncing:</span>
                 <span className="font-mono font-bold text-white bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40">
                   {currentSound.ipa}
                 </span>
@@ -626,7 +641,7 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
             <div className="flex flex-col items-center">
               <div className="text-slate-400 text-xs sm:text-sm font-medium mb-2 flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-slate-400" />
-                Пауза перед следующей фонемой...
+                Pause before next sound...
               </div>
               <div className="w-full bg-slate-700/40 rounded-full h-2.5 overflow-hidden" />
             </div>
@@ -636,16 +651,16 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
             <div className="flex flex-col items-center">
               <div className="text-amber-400 text-sm font-semibold mb-2 flex items-center gap-1.5">
                 <Pause className="w-4 h-4" />
-                Тренажёр на паузе
+                Trainer Paused
               </div>
-              <div className="text-xs text-slate-400">Нажмите Пробел, чтобы продолжить</div>
+              <div className="text-xs text-slate-400">Press Space to continue</div>
             </div>
           )}
 
           {phase === 'idle' && (
             <div className="flex flex-col items-center">
               <div className="text-slate-300 text-sm font-medium mb-1">
-                Нажмите «Начать тренировку» или Пробел
+                Click Start Drill or press Space
               </div>
             </div>
           )}
@@ -668,13 +683,13 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
               {/* Reveal word section if allowed */}
               {isWordRevealed ? (
                 <div className="mt-3 flex items-center gap-2 bg-slate-800/90 border border-slate-700 rounded-xl px-4 py-1.5 animate-fade-in shadow-md">
-                  <span className="text-xs text-slate-400">Слово-пример:</span>
+                  <span className="text-xs text-slate-400">Word hint:</span>
                   <span className="text-sm font-bold text-amber-300 font-mono">
                     {currentSound.label}
                   </span>
                   <button
                     onClick={() => audioManager.playWord(currentSound.id)}
-                    title="Прослушать слово"
+                    title="Play word"
                     className="p-1 hover:bg-slate-700 rounded text-slate-300 hover:text-white cursor-pointer"
                   >
                     <Volume1 className="w-3.5 h-3.5" />
@@ -682,7 +697,7 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
                 </div>
               ) : (
                 <div className="mt-3 text-xs text-slate-500 italic">
-                  (слово скрыто для чистоты тренировки)
+                  (word hint hidden for clean phoneme drilling)
                 </div>
               )}
             </div>
@@ -735,20 +750,20 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
             <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center mb-4">
               <Mic className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Тренажёр произношения фонем</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">Phoneme Pronunciation Drill</h2>
             <p className="text-sm text-slate-300 max-w-md mb-6 leading-relaxed">
-              Показывается символ фонемы. За время паузы (
+              Phoneme symbol is displayed. During the pause (
               <strong className="text-indigo-300">
-                {(settings.promptDelayMs / 1000).toFixed(1)} сек
+                {(settings.promptDelayMs / 1000).toFixed(1)} sec
               </strong>
-              ) вы произносите звук вслух. Затем система произносит эталонный звук для проверки.
+              ), pronounce the sound aloud. Then the system speaks reference pronunciation for verification.
             </p>
             <button
               onClick={startTrainer}
               className="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-base rounded-2xl shadow-xl shadow-indigo-600/30 flex items-center gap-2.5 transition-all transform hover:scale-105 cursor-pointer"
             >
               <Play className="w-5 h-5 fill-current" />
-              Начать тренировку (Пробел)
+              Start Drill (Space)
             </button>
           </div>
         )}
@@ -761,27 +776,27 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
           <button
             onClick={stepToPreviousSound}
             disabled={queueIndex <= 0}
-            title="Предыдущий звук (Стрелка влево)"
+            title="Previous Sound (Left Arrow)"
             className="p-3 bg-slate-700/80 hover:bg-slate-600 disabled:opacity-40 disabled:pointer-events-none text-slate-200 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-medium"
           >
             <SkipBack className="w-4 h-4" />
-            <span className="hidden sm:inline">Назад</span>
+            <span className="hidden sm:inline">Back</span>
           </button>
 
           <button
             onClick={replayCurrentSound}
-            title="Повторить звучание системы (Клавиша R)"
+            title="Replay System Audio (Key R)"
             className="p-3 bg-slate-700/80 hover:bg-slate-600 text-slate-200 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-medium"
           >
             <RotateCcw className="w-4 h-4 text-emerald-400" />
-            <span>Повторить (R)</span>
+            <span>Replay (R)</span>
           </button>
         </div>
 
         {/* Center: Play / Pause */}
         <button
           onClick={togglePause}
-          title={isPaused || phase === 'idle' ? 'Продолжить (Пробел)' : 'Пауза (Пробел)'}
+          title={isPaused || phase === 'idle' ? 'Resume (Space)' : 'Pause (Space)'}
           className={`px-8 py-3 rounded-2xl font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-lg transition-all transform hover:scale-105 cursor-pointer ${
             isPaused || phase === 'idle'
               ? 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 text-white shadow-emerald-600/30'
@@ -791,12 +806,12 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
           {isPaused || phase === 'idle' ? (
             <>
               <Play className="w-5 h-5 fill-current" />
-              <span>Старт / Продолжить</span>
+              <span>Start / Resume</span>
             </>
           ) : (
             <>
               <Pause className="w-5 h-5 fill-current" />
-              <span>Пауза</span>
+              <span>Pause</span>
             </>
           )}
         </button>
@@ -805,10 +820,10 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={advanceToNextSound}
-            title="Следующий звук (Стрелка вправо или Enter)"
+            title="Next Sound (Right Arrow or Enter)"
             className="px-4 py-3 bg-slate-700/80 hover:bg-slate-600 text-slate-200 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5 text-xs sm:text-sm font-semibold"
           >
-            <span>Дальше</span>
+            <span>Next</span>
             <SkipForward className="w-4 h-4" />
           </button>
         </div>
@@ -822,20 +837,20 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
               <Sparkles className="w-8 h-8" />
             </div>
 
-            <h3 className="text-2xl font-bold text-white mb-2">Цель достигнута!</h3>
+            <h3 className="text-2xl font-bold text-white mb-2">Target Reached!</h3>
             <p className="text-sm text-slate-300 mb-6">
-              Вы успешно повторили запланированную серию из{' '}
-              <strong className="text-emerald-400">{repetitionCount}</strong> фонем!
+              You successfully completed your drill session of{' '}
+              <strong className="text-emerald-400">{repetitionCount}</strong> phonemes!
             </p>
 
             <div className="grid grid-cols-2 gap-3 bg-slate-800/80 rounded-2xl p-4 mb-6 border border-slate-700/80 text-left">
               <div>
-                <div className="text-xs text-slate-400 font-medium">Общее время</div>
+                <div className="text-xs text-slate-400 font-medium">Total Time</div>
                 <div className="text-lg font-bold text-white font-mono">{formatTime(elapsedSeconds)}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400 font-medium">Средний темп</div>
-                <div className="text-lg font-bold text-emerald-400">{repsPerMin} фонем/мин</div>
+                <div className="text-xs text-slate-400 font-medium">Average Pace</div>
+                <div className="text-lg font-bold text-emerald-400">{repsPerMin} sounds/min</div>
               </div>
             </div>
 
@@ -847,17 +862,18 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
                 }}
                 className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-colors cursor-pointer"
               >
-                Продолжить тренировку
+                Continue Drill
               </button>
               <button
                 onClick={() => {
+                  repetitionCountRef.current = 0;
                   setRepetitionCount(0);
                   setIsSessionCompleteModalOpen(false);
                   advanceToNextSound();
                 }}
                 className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-xl transition-colors cursor-pointer text-sm"
               >
-                Сбросить счетчик и начать заново
+                Reset Counter & Restart
               </button>
             </div>
           </div>

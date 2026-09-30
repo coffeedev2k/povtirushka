@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
                   English Sounds Teacher
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                  Повторюшка
+                  Drill Trainer
                 </span>
               </div>
             </div>
@@ -92,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Zap className="w-3.5 h-3.5 text-amber-300" />
-            <span>Тренажёр</span>
+            <span>Drill</span>
           </button>
 
           <button
@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <BookOpen className="w-3.5 h-3.5 text-sky-300" />
-            <span>Таблица фонем</span>
+            <span>Phoneme Chart</span>
           </button>
 
           <button
@@ -119,7 +119,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Target className="w-3.5 h-3.5 text-emerald-300" />
-            <span>Квиз</span>
+            <span>Quiz</span>
           </button>
         </div>
 
@@ -130,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={toggleMute}
-              title={currentVolume > 0 ? 'Выключить звук' : 'Включить звук'}
+              title={currentVolume > 0 ? 'Mute' : 'Unmute'}
               className="text-slate-300 hover:text-white cursor-pointer"
             >
               {currentVolume === 0 ? (
@@ -147,7 +147,7 @@ export const Header: React.FC<HeaderProps> = ({
               value={currentVolume}
               onChange={(e) => onUpdateVolume(parseFloat(e.target.value))}
               className="w-14 sm:w-18 accent-indigo-500 h-1.5 cursor-pointer"
-              title={`Громкость: ${Math.round(currentVolume * 100)}%`}
+              title={`Volume: ${Math.round(currentVolume * 100)}%`}
             />
           </div>
 
@@ -155,7 +155,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={toggleFullscreen}
-            title={isFullscreen ? 'Выйти из полноэкранного режима' : 'На весь экран'}
+            title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
             className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors cursor-pointer"
           >
             {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
@@ -165,7 +165,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={appMode === 'drill' ? onOpenDrillSettings : onOpenGameSettings}
-            title="Настройки (Esc)"
+            title="Settings (Esc)"
             className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors cursor-pointer"
           >
             <Settings className="w-4 h-4 text-indigo-300" />
@@ -175,4 +175,3 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
-
