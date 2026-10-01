@@ -18,9 +18,10 @@ export const CustomSoundSelectorModal: React.FC<CustomSoundSelectorModalProps> =
 }) => {
   if (!isOpen) return null;
 
-  const selectedSet = new Set(
-    selectedSoundIds.length > 0 ? selectedSoundIds : ALL_SOUNDS.map((s) => s.id)
-  );
+  // An empty custom selection must stay empty. Treating it as "all sounds"
+  // made the first click remove one sound from a set of 44 instead of selecting
+  // the single sound the user clicked.
+  const selectedSet = new Set(selectedSoundIds);
 
   const toggleSound = (id: string) => {
     const nextSet = new Set(selectedSet);
