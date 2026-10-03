@@ -73,7 +73,7 @@ export const SoundCard: React.FC<SoundCardProps> = ({
           <span className="font-mono font-bold text-sky-400 tracking-wide">
             {sound.ipa}
           </span>
-          <span className="text-slate-400 font-medium capitalize truncate max-w-[60px] text-[11px]">
+          <span className="text-slate-400 font-medium capitalize truncate max-w-[72px] text-[11px]">
             {sound.label}
           </span>
         </div>

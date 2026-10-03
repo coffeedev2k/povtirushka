@@ -10,6 +10,8 @@ export type SoundCategory =
 export interface SoundData {
   id: string;
   label: string;
+  wordAudio?: string;
+  wordIpa?: string;
   ipa: string;
   category: SoundCategory;
   categoryLabel: string;

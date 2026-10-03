@@ -1,5 +1,6 @@
 import { VoiceMode, FeedbackMode } from '../types';
 import { getAssetUrl } from '../utils/assets';
+import { SOUNDS_BY_ID } from '../data/sounds';
 
 const VOICES: Array<'chart' | 'alex' | 'f1' | 'f2'> = ['chart', 'alex', 'f1', 'f2'];
 
@@ -53,6 +54,13 @@ class AudioManager {
   }
 
   public getWordUrl(soundId: string): string {
+    const sound = SOUNDS_BY_ID.get(soundId);
+    if (sound?.wordAudio) {
+      return getAssetUrl(`audio/words/${sound.wordAudio}.mp3`);
+    }
+    if (sound?.label) {
+      return getAssetUrl(`audio/words/${sound.label}.mp3`);
+    }
     return getAssetUrl(`audio/words/${soundId}.mp3`);
   }
 

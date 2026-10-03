@@ -22,7 +22,7 @@
    - Интерактивная анимированная шкала обратного отсчёта. В этот момент ученик произносит звук или базовое проверочное слово вслух.
 3. **Эталонное произношение системой**:
    - Система автоматически воспроизводит чистый звук из выбранного голосового каталога.
-   - Опционально: сразу после звука может произноситься проверочное слово (например, *tea*, *sheep*).
+   - Опционально: сразу после звука может произноситься проверочное слово (например, *tea*, *peep*).
    - При показе «Символ, затем слово» — проверочное слово плавно открывается после озвучки.
 4. **Переход к следующей фонеме**:
    - Настраиваемая пауза после звука (по умолчанию 0.8 сек).
@@ -31,10 +31,10 @@
 
 ### 🎛 Настройки групп фонем
 
-- **Все фонемы** (все 44 звука языка)
-- **Только гласные (не дифтонги)** (12 чистых монофтонгов: sheep, ship, good, shoot, bed, teacher, bird, door, cat, up, far, on)
-- **Только дифтонги** (8 двойных гласных: here, wait, cure, boy, show, hair, my, cow)
-- **Только согласные** (24 согласных: pea, boat, tea, dog, car, go, cheese, june, fly, video, think, this, see, zoo, shall, television, man, now, singer, hat, love, red, wet, yes)
+- **Все фонемы** (все 44 звука языка по University of Sheffield / IPA)
+- **Только гласные (не дифтонги)** (12 чистых монофтонгов: peep, pit, put, food, pet, about, bird, port, pat, cup, part, pot)
+- **Только дифтонги** (8 двойных гласных: hear, bay, pure, boy, so, hair, buy, cow)
+- **Только согласные** (24 согласных: pea, bee, tea, do, cat, get, chin, joke, fat, vet, thin, then, so, zoo, shoe, leisure, me, no, sing, hat, lip, red, wet, yet)
 - **Все гласные** (20 монофтонгов и дифтонгов)
 - **Выборочный набор** (любой список фонем, отмеченных галочками)
 
@@ -109,7 +109,7 @@ Fast, high-cadence pronunciation trainer designed for thousands of repetitions:
    - Animated progress countdown bar for the user to speak aloud.
 3. **Reference Pronunciation**:
    - System plays native audio pronunciation from the selected voice catalog.
-   - Optional example word playback (e.g. *tea*, *sheep*).
+   - Optional example word playback (e.g. *tea*, *peep*).
    - Word can be revealed after audio for self-check.
 4. **Auto-Advance & Repetition Limits**:
    - Configurable post-delay before next card (e.g. 0.8s).

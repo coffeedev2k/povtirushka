@@ -315,7 +315,7 @@ export const DrillSettingsModal: React.FC<DrillSettingsModalProps> = ({
                   Также озвучивать проверочное слово
                 </div>
                 <div className="text-[11px] text-slate-400">
-                  После фонемы система сразу произнесет пример слова (tea, sheep и т.д.)
+                  После фонемы система сразу произнесет пример слова (tea, peep и т.д.)
                 </div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">

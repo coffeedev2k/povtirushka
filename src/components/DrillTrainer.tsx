@@ -687,6 +687,11 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
                   <span className="text-sm font-bold text-amber-300 font-mono">
                     {currentSound.label}
                   </span>
+                  {currentSound.wordIpa && (
+                    <span className="text-xs font-mono text-slate-400">
+                      {currentSound.wordIpa}
+                    </span>
+                  )}
                   <button
                     onClick={() => audioManager.playWord(currentSound.id)}
                     title="Play word"
@@ -713,8 +718,13 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
                 </span>
               </div>
               {isWordRevealed && (
-                <div className="mt-3 text-sm font-bold text-amber-300 font-mono">
-                  {currentSound.label}
+                <div className="mt-3 text-sm font-bold text-amber-300 font-mono flex items-center gap-1.5">
+                  <span>{currentSound.label}</span>
+                  {currentSound.wordIpa && (
+                    <span className="text-xs text-slate-400 font-normal">
+                      {currentSound.wordIpa}
+                    </span>
+                  )}
                 </div>
               )}
             </div>

@@ -48,6 +48,11 @@ export const ArticulationModal: React.FC<ArticulationModalProps> = ({
             <div>
               <h3 className="text-lg font-bold text-white capitalize flex items-center gap-2">
                 {sound.label}
+                {sound.wordIpa && (
+                  <span className="font-mono text-xs text-sky-400 lowercase font-normal">
+                    {sound.wordIpa}
+                  </span>
+                )}
                 <span className="text-xs font-normal text-slate-400 px-2 py-0.5 rounded-full bg-slate-800 border border-slate-750">
                   {sound.categoryLabel}
                 </span>

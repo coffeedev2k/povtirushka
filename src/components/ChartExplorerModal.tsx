@@ -199,7 +199,7 @@ const SoundTile: React.FC<SoundTileProps> = ({
 
       <div className="mt-1.5 w-full flex items-center justify-between text-xs px-0.5">
         <span className="font-mono font-bold text-sky-400">{sound.ipa}</span>
-        <span className="text-slate-400 text-[10px] capitalize truncate max-w-[45px]">
+        <span className="text-slate-400 text-[10px] capitalize truncate max-w-[65px]">
           {sound.label}
         </span>
       </div>
