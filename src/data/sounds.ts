@@ -4,63 +4,63 @@ export const ALL_SOUNDS: SoundData[] = [
   // Monophthongs (12)
   {
     id: 'sheep',
-    label: 'peep',
-    wordIpa: '/piːp/',
+    label: 'cheese',
+    wordIpa: '/tʃiːz/',
     ipa: '/iː/',
     category: 'monophthong',
     categoryLabel: 'Long Vowel',
-    exampleWords: ['peep', 'see', 'feet', 'team'],
-    description: 'Long high front unrounded vowel (as in peep). Lips spread, tongue high near roof of mouth.'
+    exampleWords: ['cheese', 'green', 'tree', 'eat'],
+    description: 'Long high front unrounded vowel (as in cheese). Lips spread, tongue high near roof of mouth.'
   },
   {
     id: 'ship',
-    label: 'pit',
-    wordIpa: '/pɪt/',
+    label: 'fish',
+    wordIpa: '/fɪʃ/',
     ipa: '/ɪ/',
     category: 'monophthong',
     categoryLabel: 'Short Vowel',
-    exampleWords: ['pit', 'sit', 'in', 'fish'],
-    description: 'Short lax front unrounded vowel (as in pit). Slightly more open than /iː/.'
+    exampleWords: ['fish', 'milk', 'window', 'city'],
+    description: 'Short lax front unrounded vowel (as in fish). Slightly more open than /iː/.'
   },
   {
     id: 'good',
-    label: 'put',
-    wordIpa: '/pʊt/',
+    label: 'book',
+    wordIpa: '/bʊk/',
     ipa: '/ʊ/',
     category: 'monophthong',
     categoryLabel: 'Short Vowel',
-    exampleWords: ['put', 'book', 'look', 'push'],
-    description: 'Short near-close back rounded vowel (as in put). Lips gently rounded.'
+    exampleWords: ['book', 'look', 'push', 'wood'],
+    description: 'Short near-close back rounded vowel (as in book). Lips gently rounded.'
   },
   {
     id: 'shoot',
-    label: 'food',
-    wordIpa: '/fuːd/',
+    label: 'moon',
+    wordIpa: '/muːn/',
     ipa: '/uː/',
     category: 'monophthong',
     categoryLabel: 'Long Vowel',
-    exampleWords: ['food', 'blue', 'two', 'group'],
-    description: 'Long close back rounded vowel (as in food). Lips pursed and rounded.'
+    exampleWords: ['moon', 'blue', 'soup', 'room'],
+    description: 'Long close back rounded vowel (as in moon). Lips pursed and rounded.'
   },
   {
     id: 'bed',
-    label: 'pet',
-    wordIpa: '/pet/',
+    label: 'desk',
+    wordIpa: '/desk/',
     ipa: '/e/',
     category: 'monophthong',
     categoryLabel: 'Short Vowel',
-    exampleWords: ['pet', 'men', 'red', 'said'],
-    description: 'Short open-mid front unrounded vowel (as in pet). Jaw slightly dropped, tongue mid-front.'
+    exampleWords: ['desk', 'bed', 'egg', 'help'],
+    description: 'Short open-mid front unrounded vowel (as in desk). Jaw slightly dropped, tongue mid-front.'
   },
   {
     id: 'teacher',
-    label: 'about',
-    wordIpa: '/əbaʊt/',
+    label: 'banana',
+    wordIpa: '/bəˈnɑːnə/',
     ipa: '/ə/',
     category: 'monophthong',
     categoryLabel: 'Schwa / Neutral',
-    exampleWords: ['about', 'banana', 'water', 'police'],
-    description: 'Mid-central neutral vowel (Schwa, as in about). Completely relaxed mouth and tongue.'
+    exampleWords: ['banana', 'sofa', 'police', 'about'],
+    description: 'Mid-central neutral vowel (Schwa, as in banana). Completely relaxed mouth and tongue.'
   },
   {
     id: 'bird',
@@ -69,288 +69,286 @@ export const ALL_SOUNDS: SoundData[] = [
     ipa: '/ɜː/',
     category: 'monophthong',
     categoryLabel: 'Long Vowel',
-    exampleWords: ['bird', 'word', 'turn', 'girl'],
+    exampleWords: ['bird', 'girl', 'world', 'shirt'],
     description: 'Long open-mid central unrounded vowel (as in bird). Neutral lips, tongue flat in center.'
   },
   {
     id: 'door',
-    label: 'port',
-    wordIpa: '/pɔːt/',
+    label: 'ball',
+    wordIpa: '/bɔːl/',
     ipa: '/ɔː/',
     category: 'monophthong',
     categoryLabel: 'Long Vowel',
-    exampleWords: ['port', 'four', 'saw', 'walk'],
-    description: 'Long open-mid back rounded vowel (as in port). Jaw open, lips rounded.'
+    exampleWords: ['ball', 'door', 'horse', 'walk'],
+    description: 'Long open-mid back rounded vowel (as in ball). Jaw open, lips rounded.'
   },
   {
     id: 'cat',
-    label: 'pat',
-    wordIpa: '/pæt/',
+    label: 'apple',
+    wordIpa: '/ˈæpl/',
     ipa: '/æ/',
     category: 'monophthong',
     categoryLabel: 'Short Vowel',
-    exampleWords: ['pat', 'apple', 'man', 'black'],
-    description: 'Short near-open front unrounded vowel (as in pat). Wide open mouth, tongue low and forward.'
+    exampleWords: ['apple', 'cat', 'black', 'flag'],
+    description: 'Short near-open front unrounded vowel (as in apple). Wide open mouth, tongue low and forward.'
   },
   {
     id: 'up',
-    label: 'cup',
-    wordIpa: '/kʌp/',
+    label: 'sun',
+    wordIpa: '/sʌn/',
     ipa: '/ʌ/',
     category: 'monophthong',
     categoryLabel: 'Short Vowel',
-    exampleWords: ['cup', 'sun', 'love', 'luck'],
-    description: 'Short open-mid back unrounded vowel (as in cup). Relaxed open jaw, tongue slightly back.'
+    exampleWords: ['sun', 'cup', 'bus', 'love'],
+    description: 'Short open-mid back unrounded vowel (as in sun). Relaxed open jaw, tongue slightly back.'
   },
   {
     id: 'far',
-    label: 'part',
-    wordIpa: '/pɑːt/',
+    label: 'star',
+    wordIpa: '/stɑː/',
     ipa: '/ɑː/',
     category: 'monophthong',
     categoryLabel: 'Long Vowel',
-    exampleWords: ['part', 'car', 'heart', 'calm'],
-    description: 'Long open back unrounded vowel (as in part). Wide open jaw, back of tongue lowered.'
+    exampleWords: ['star', 'car', 'heart', 'park'],
+    description: 'Long open back unrounded vowel (as in star). Wide open jaw, back of tongue lowered.'
   },
   {
     id: 'on',
-    label: 'pot',
-    wordIpa: '/pɒt/',
+    label: 'clock',
+    wordIpa: '/klɒk/',
     ipa: '/ɒ/',
     category: 'monophthong',
     categoryLabel: 'Short Vowel',
-    exampleWords: ['pot', 'hot', 'dog', 'box'],
-    description: 'Short open back rounded vowel (as in pot). Jaw low, lips open and rounded.'
+    exampleWords: ['clock', 'dog', 'box', 'orange'],
+    description: 'Short open back rounded vowel (as in clock). Jaw low, lips open and rounded.'
   },
 
   // Diphthongs (8)
   {
-    id: 'here',
-    label: 'hear',
-    wordIpa: '/hɪə/',
-    ipa: '/ɪə/',
-    category: 'diphthong',
-    categoryLabel: 'Diphthong',
-    exampleWords: ['hear', 'ear', 'near', 'beer'],
-    description: 'Centering diphthong gliding from /ɪ/ toward schwa /ə/ (as in hear).'
-  },
-  {
     id: 'wait',
-    label: 'bay',
-    wordIpa: '/beɪ/',
+    label: 'train',
+    wordIpa: '/treɪn/',
     ipa: '/eɪ/',
     category: 'diphthong',
     categoryLabel: 'Diphthong',
-    exampleWords: ['bay', 'day', 'train', 'face'],
-    description: 'Closing diphthong gliding from /e/ toward /ɪ/ (as in bay).'
-  },
-  {
-    id: 'cure',
-    label: 'pure',
-    wordIpa: '/pjʊə/',
-    ipa: '/ʊə/',
-    category: 'diphthong',
-    categoryLabel: 'Diphthong',
-    exampleWords: ['pure', 'tour', 'cure', 'sure'],
-    description: 'Centering diphthong gliding from /ʊ/ toward schwa /ə/ (as in pure).'
-  },
-  {
-    id: 'boy',
-    label: 'boy',
-    wordIpa: '/bɔɪ/',
-    ipa: '/ɔɪ/',
-    category: 'diphthong',
-    categoryLabel: 'Diphthong',
-    exampleWords: ['boy', 'coin', 'voice', 'toy'],
-    description: 'Closing diphthong gliding from /ɔː/ toward /ɪ/ (as in boy).'
-  },
-  {
-    id: 'show',
-    label: 'so',
-    wordAudio: 'so-v',
-    wordIpa: '/səʊ/',
-    ipa: '/əʊ/',
-    category: 'diphthong',
-    categoryLabel: 'Diphthong',
-    exampleWords: ['so', 'go', 'home', 'boat'],
-    description: 'Closing diphthong gliding from schwa /ə/ toward /ʊ/ (as in so).'
-  },
-  {
-    id: 'hair',
-    label: 'hair',
-    wordIpa: '/heə/',
-    ipa: '/eə/',
-    category: 'diphthong',
-    categoryLabel: 'Diphthong',
-    exampleWords: ['hair', 'care', 'bear', 'there'],
-    description: 'Centering diphthong gliding from /e/ toward schwa /ə/ (as in hair).'
+    exampleWords: ['train', 'rain', 'cake', 'day'],
+    description: 'Closing diphthong gliding from /e/ toward /ɪ/ (as in train).'
   },
   {
     id: 'my',
-    label: 'buy',
-    wordIpa: '/baɪ/',
+    label: 'sky',
+    wordIpa: '/skaɪ/',
     ipa: '/aɪ/',
     category: 'diphthong',
     categoryLabel: 'Diphthong',
-    exampleWords: ['buy', 'fly', 'time', 'eye'],
-    description: 'Closing diphthong gliding from /a/ toward /ɪ/ (as in buy).'
+    exampleWords: ['sky', 'bike', 'time', 'ice'],
+    description: 'Closing diphthong gliding from /a/ toward /ɪ/ (as in sky).'
+  },
+  {
+    id: 'boy',
+    label: 'coin',
+    wordIpa: '/kɔɪn/',
+    ipa: '/ɔɪ/',
+    category: 'diphthong',
+    categoryLabel: 'Diphthong',
+    exampleWords: ['coin', 'boy', 'toy', 'voice'],
+    description: 'Closing diphthong gliding from /ɔː/ toward /ɪ/ (as in coin).'
+  },
+  {
+    id: 'show',
+    label: 'home',
+    wordIpa: '/həʊm/',
+    ipa: '/əʊ/',
+    category: 'diphthong',
+    categoryLabel: 'Diphthong',
+    exampleWords: ['home', 'snow', 'boat', 'cold'],
+    description: 'Closing diphthong gliding from schwa /ə/ toward /ʊ/ (as in home).'
   },
   {
     id: 'cow',
-    label: 'cow',
-    wordIpa: '/kaʊ/',
+    label: 'cloud',
+    wordIpa: '/klaʊd/',
     ipa: '/aʊ/',
     category: 'diphthong',
     categoryLabel: 'Diphthong',
-    exampleWords: ['cow', 'now', 'house', 'mouth'],
-    description: 'Closing diphthong gliding from /a/ toward /ʊ/ (as in cow).'
+    exampleWords: ['cloud', 'mouse', 'house', 'town'],
+    description: 'Closing diphthong gliding from /a/ toward /ʊ/ (as in cloud).'
+  },
+  {
+    id: 'here',
+    label: 'ear',
+    wordIpa: '/ɪə/',
+    ipa: '/ɪə/',
+    category: 'diphthong',
+    categoryLabel: 'Diphthong',
+    exampleWords: ['ear', 'deer', 'hear', 'near'],
+    description: 'Centering diphthong gliding from /ɪ/ toward schwa /ə/ (as in ear).'
+  },
+  {
+    id: 'hair',
+    label: 'bear',
+    wordIpa: '/beə/',
+    ipa: '/eə/',
+    category: 'diphthong',
+    categoryLabel: 'Diphthong',
+    exampleWords: ['bear', 'chair', 'hair', 'wear'],
+    description: 'Centering diphthong gliding from /e/ toward schwa /ə/ (as in bear).'
+  },
+  {
+    id: 'cure',
+    label: 'tour',
+    wordIpa: '/tʊə/',
+    ipa: '/ʊə/',
+    category: 'diphthong',
+    categoryLabel: 'Diphthong',
+    exampleWords: ['tour', 'pure', 'cure', 'sure'],
+    description: 'Centering diphthong gliding from /ʊ/ toward schwa /ə/ (as in tour).'
   },
 
   // Consonants - Plosives (6)
   {
     id: 'pea',
-    label: 'pea',
-    wordIpa: '/piː/',
+    label: 'pizza',
+    wordIpa: '/ˈpiːtsə/',
     ipa: '/p/',
     category: 'consonant_plosive',
     categoryLabel: 'Plosive (Unvoiced)',
-    exampleWords: ['pea', 'pen', 'stop', 'happy'],
-    description: 'Voiceless bilabial stop (as in pea). Lips pressed firmly together then released with a puff of air.'
+    exampleWords: ['pizza', 'pen', 'paper', 'stop'],
+    description: 'Voiceless bilabial stop (as in pizza). Lips pressed firmly together then released with a puff of air.'
   },
   {
     id: 'boat',
-    label: 'bee',
-    wordIpa: '/biː/',
+    label: 'baby',
+    wordIpa: '/ˈbeɪbi/',
     ipa: '/b/',
     category: 'consonant_plosive',
     categoryLabel: 'Plosive (Voiced)',
-    exampleWords: ['bee', 'bed', 'big', 'cab'],
-    description: 'Voiced bilabial stop (as in bee). Vocal cords vibrate as lips release trapped air.'
+    exampleWords: ['baby', 'ball', 'book', 'cab'],
+    description: 'Voiced bilabial stop (as in baby). Vocal cords vibrate as lips release trapped air.'
   },
   {
     id: 'tea',
-    label: 'tea',
-    wordIpa: '/tiː/',
+    label: 'tiger',
+    wordIpa: '/ˈtaɪɡə/',
     ipa: '/t/',
     category: 'consonant_plosive',
     categoryLabel: 'Plosive (Unvoiced)',
-    exampleWords: ['tea', 'time', 'cat', 'water'],
-    description: 'Voiceless alveolar stop (as in tea). Tongue tip against alveolar ridge behind upper teeth.'
+    exampleWords: ['tiger', 'tea', 'table', 'water'],
+    description: 'Voiceless alveolar stop (as in tiger). Tongue tip against alveolar ridge behind upper teeth.'
   },
   {
     id: 'dog',
-    label: 'do',
-    wordIpa: '/duː/',
+    label: 'door',
+    wordIpa: '/dɔː/',
     ipa: '/d/',
     category: 'consonant_plosive',
     categoryLabel: 'Plosive (Voiced)',
-    exampleWords: ['do', 'day', 'red', 'under'],
-    description: 'Voiced alveolar stop (as in do). Tongue tip against alveolar ridge with vocal cord vibration.'
+    exampleWords: ['door', 'dog', 'day', 'under'],
+    description: 'Voiced alveolar stop (as in door). Tongue tip against alveolar ridge with vocal cord vibration.'
   },
   {
     id: 'car',
-    label: 'cat',
-    wordIpa: '/kæt/',
+    label: 'coffee',
+    wordIpa: '/ˈkɒfi/',
     ipa: '/k/',
     category: 'consonant_plosive',
     categoryLabel: 'Plosive (Unvoiced)',
-    exampleWords: ['cat', 'car', 'black', 'key'],
-    description: 'Voiceless velar stop (as in cat). Back of tongue touches soft palate (velum).'
+    exampleWords: ['coffee', 'cat', 'car', 'key'],
+    description: 'Voiceless velar stop (as in coffee). Back of tongue touches soft palate (velum).'
   },
   {
     id: 'go',
-    label: 'get',
-    wordIpa: '/get/',
+    label: 'gold',
+    wordIpa: '/ɡəʊld/',
     ipa: '/ɡ/',
     category: 'consonant_plosive',
     categoryLabel: 'Plosive (Voiced)',
-    exampleWords: ['get', 'good', 'dog', 'big'],
-    description: 'Voiced velar stop (as in get). Back of tongue against velum with vocal vibration.'
+    exampleWords: ['gold', 'game', 'green', 'big'],
+    description: 'Voiced velar stop (as in gold). Back of tongue against velum with vocal vibration.'
   },
 
   // Consonants - Affricates (2)
   {
     id: 'cheese',
-    label: 'chin',
-    wordIpa: '/ʧɪn/',
+    label: 'chair',
+    wordIpa: '/tʃeə/',
     ipa: '/tʃ/',
     category: 'consonant_affricate',
     categoryLabel: 'Affricate (Unvoiced)',
-    exampleWords: ['chin', 'chair', 'match', 'picture'],
-    description: 'Voiceless postalveolar affricate (as in chin). Begins like /t/ and releases into /ʃ/.'
+    exampleWords: ['chair', 'chocolate', 'cheese', 'match'],
+    description: 'Voiceless postalveolar affricate (as in chair). Begins like /t/ and releases into /ʃ/.'
   },
   {
     id: 'june',
-    label: 'joke',
-    wordIpa: '/ʤəʊk/',
+    label: 'juice',
+    wordIpa: '/dʒuːs/',
     ipa: '/dʒ/',
     category: 'consonant_affricate',
     categoryLabel: 'Affricate (Voiced)',
-    exampleWords: ['joke', 'judge', 'jump', 'age'],
-    description: 'Voiced postalveolar affricate (as in joke). Begins like /d/ and releases into /ʒ/ with voice.'
+    exampleWords: ['juice', 'jump', 'june', 'orange'],
+    description: 'Voiced postalveolar affricate (as in juice). Begins like /d/ and releases into /ʒ/ with voice.'
   },
 
   // Consonants - Fricatives (8)
   {
     id: 'fly',
-    label: 'fat',
-    wordIpa: '/fæt/',
+    label: 'fire',
+    wordIpa: '/ˈfaɪə/',
     ipa: '/f/',
     category: 'consonant_fricative',
     categoryLabel: 'Fricative (Unvoiced)',
-    exampleWords: ['fat', 'far', 'fish', 'coffee'],
-    description: 'Voiceless labiodental fricative (as in fat). Upper front teeth lightly touch lower lip.'
+    exampleWords: ['fire', 'fox', 'fish', 'coffee'],
+    description: 'Voiceless labiodental fricative (as in fire). Upper front teeth lightly touch lower lip.'
   },
   {
     id: 'video',
-    label: 'vet',
-    wordIpa: '/vet/',
+    label: 'voice',
+    wordIpa: '/vɔɪs/',
     ipa: '/v/',
     category: 'consonant_fricative',
     categoryLabel: 'Fricative (Voiced)',
-    exampleWords: ['vet', 'voice', 'live', 'leave'],
-    description: 'Voiced labiodental fricative (as in vet). Upper teeth on lower lip with vocal vibration.'
+    exampleWords: ['voice', 'van', 'video', 'live'],
+    description: 'Voiced labiodental fricative (as in voice). Upper teeth on lower lip with vocal vibration.'
   },
   {
     id: 'think',
-    label: 'thin',
-    wordIpa: '/θɪn/',
+    label: 'three',
+    wordIpa: '/θriː/',
     ipa: '/θ/',
     category: 'consonant_fricative',
     categoryLabel: 'Fricative (Unvoiced)',
-    exampleWords: ['thin', 'three', 'bath', 'mouth'],
-    description: 'Voiceless dental fricative (as in thin). Tongue tip placed gently between upper and lower teeth.'
+    exampleWords: ['three', 'think', 'mouth', 'bath'],
+    description: 'Voiceless dental fricative (as in three). Tongue tip placed gently between upper and lower teeth.'
   },
   {
     id: 'this',
-    label: 'then',
-    wordIpa: '/ðen/',
+    label: 'mother',
+    wordIpa: '/ˈmʌðə/',
     ipa: '/ð/',
     category: 'consonant_fricative',
     categoryLabel: 'Fricative (Voiced)',
-    exampleWords: ['then', 'that', 'they', 'mother'],
-    description: 'Voiced dental fricative (as in then). Tongue tip between teeth with vocal vibration.'
+    exampleWords: ['mother', 'they', 'this', 'father'],
+    description: 'Voiced dental fricative (as in mother). Tongue tip between teeth with vocal vibration.'
   },
   {
     id: 'see',
-    label: 'so',
-    wordAudio: 'so',
-    wordIpa: '/səʊ/',
+    label: 'snake',
+    wordIpa: '/sneɪk/',
     ipa: '/s/',
     category: 'consonant_fricative',
     categoryLabel: 'Fricative (Unvoiced)',
-    exampleWords: ['so', 'sun', 'city', 'yes'],
-    description: 'Voiceless alveolar fricative (as in so). Air forced through narrow channel over tongue tip.'
+    exampleWords: ['snake', 'sun', 'city', 'yes'],
+    description: 'Voiceless alveolar fricative (as in snake). Air forced through narrow channel over tongue tip.'
   },
   {
     id: 'zoo',
-    label: 'zoo',
-    wordIpa: '/zuː/',
+    label: 'zebra',
+    wordIpa: '/ˈzebrə/',
     ipa: '/z/',
     category: 'consonant_fricative',
     categoryLabel: 'Fricative (Voiced)',
-    exampleWords: ['zoo', 'zero', 'buzz', 'easy'],
-    description: 'Voiced alveolar fricative (as in zoo). Like /s/ but with vocal cord vibration.'
+    exampleWords: ['zebra', 'zoo', 'zero', 'easy'],
+    description: 'Voiced alveolar fricative (as in zebra). Like /s/ but with vocal cord vibration.'
   },
   {
     id: 'shall',
@@ -364,45 +362,45 @@ export const ALL_SOUNDS: SoundData[] = [
   },
   {
     id: 'television',
-    label: 'leisure',
-    wordIpa: '/leʒə/',
+    label: 'television',
+    wordIpa: '/ˈtelɪvɪʒn/',
     ipa: '/ʒ/',
     category: 'consonant_fricative',
     categoryLabel: 'Fricative (Voiced)',
-    exampleWords: ['leisure', 'measure', 'vision', 'beige'],
-    description: 'Voiced postalveolar fricative (as in leisure). Like /ʃ/ but with vocal cord vibration.'
+    exampleWords: ['television', 'treasure', 'measure', 'vision'],
+    description: 'Voiced postalveolar fricative (as in television). Like /ʃ/ but with vocal cord vibration.'
   },
 
   // Consonants - Nasals (3)
   {
     id: 'man',
-    label: 'me',
-    wordIpa: '/miː/',
+    label: 'milk',
+    wordIpa: '/mɪlk/',
     ipa: '/m/',
     category: 'consonant_nasal',
     categoryLabel: 'Nasal (Voiced)',
-    exampleWords: ['me', 'my', 'man', 'come'],
-    description: 'Voiced bilabial nasal (as in me). Both lips closed; air escapes freely through the nose.'
+    exampleWords: ['milk', 'moon', 'money', 'come'],
+    description: 'Voiced bilabial nasal (as in milk). Both lips closed; air escapes freely through the nose.'
   },
   {
     id: 'now',
-    label: 'no',
-    wordIpa: '/nəʊ/',
+    label: 'night',
+    wordIpa: '/naɪt/',
     ipa: '/n/',
     category: 'consonant_nasal',
     categoryLabel: 'Nasal (Voiced)',
-    exampleWords: ['no', 'new', 'sun', 'night'],
-    description: 'Voiced alveolar nasal (as in no). Tongue tip against alveolar ridge; air through nose.'
+    exampleWords: ['night', 'nose', 'new', 'sun'],
+    description: 'Voiced alveolar nasal (as in night). Tongue tip against alveolar ridge; air through nose.'
   },
   {
     id: 'singer',
-    label: 'sing',
-    wordIpa: '/sɪŋ/',
+    label: 'ring',
+    wordIpa: '/rɪŋ/',
     ipa: '/ŋ/',
     category: 'consonant_nasal',
     categoryLabel: 'Nasal (Voiced)',
-    exampleWords: ['sing', 'song', 'long', 'think'],
-    description: 'Voiced velar nasal (as in sing). Back of tongue touches soft palate; air flows through nose.'
+    exampleWords: ['ring', 'king', 'song', 'long'],
+    description: 'Voiced velar nasal (as in ring). Back of tongue touches soft palate; air flows through nose.'
   },
 
   // Consonants - Approximants / Glottal (5)
@@ -413,18 +411,18 @@ export const ALL_SOUNDS: SoundData[] = [
     ipa: '/h/',
     category: 'consonant_fricative',
     categoryLabel: 'Glottal Fricative',
-    exampleWords: ['hat', 'here', 'hot', 'home'],
+    exampleWords: ['hat', 'house', 'horse', 'heart'],
     description: 'Voiceless glottal fricative (as in hat). Breath exhaled through open vocal cords.'
   },
   {
     id: 'love',
-    label: 'lip',
-    wordIpa: '/lɪp/',
+    label: 'lemon',
+    wordIpa: '/ˈlemən/',
     ipa: '/l/',
     category: 'consonant_approximant',
     categoryLabel: 'Lateral Approximant',
-    exampleWords: ['lip', 'look', 'light', 'ball'],
-    description: 'Voiced alveolar lateral approximant (as in lip). Tongue tip on ridge, air flows around sides.'
+    exampleWords: ['lemon', 'lion', 'light', 'ball'],
+    description: 'Voiced alveolar lateral approximant (as in lemon). Tongue tip on ridge, air flows around sides.'
   },
   {
     id: 'red',
@@ -433,28 +431,28 @@ export const ALL_SOUNDS: SoundData[] = [
     ipa: '/r/',
     category: 'consonant_approximant',
     categoryLabel: 'Approximant (Voiced)',
-    exampleWords: ['red', 'run', 'read', 'right'],
+    exampleWords: ['red', 'robot', 'run', 'read'],
     description: 'Voiced postalveolar approximant (as in red). Tongue curled back without touching palate.'
   },
   {
     id: 'wet',
-    label: 'wet',
-    wordIpa: '/wet/',
+    label: 'water',
+    wordIpa: '/ˈwɔːtə/',
     ipa: '/w/',
     category: 'consonant_approximant',
     categoryLabel: 'Approximant (Voiced)',
-    exampleWords: ['wet', 'wait', 'we', 'water'],
-    description: 'Voiced labial-velar approximant (as in wet). Lips rounded, back of tongue raised.'
+    exampleWords: ['water', 'window', 'white', 'wind'],
+    description: 'Voiced labial-velar approximant (as in water). Lips rounded, back of tongue raised.'
   },
   {
     id: 'yes',
-    label: 'yet',
-    wordIpa: '/jet/',
+    label: 'yellow',
+    wordIpa: '/ˈjeləʊ/',
     ipa: '/j/',
     category: 'consonant_approximant',
     categoryLabel: 'Approximant (Voiced)',
-    exampleWords: ['yet', 'yellow', 'you', 'year'],
-    description: 'Voiced palatal approximant (as in yet). Tongue near hard palate, gliding into vowel.'
+    exampleWords: ['yellow', 'yes', 'yacht', 'you'],
+    description: 'Voiced palatal approximant (as in yellow). Tongue near hard palate, gliding into vowel.'
   }
 ];
 

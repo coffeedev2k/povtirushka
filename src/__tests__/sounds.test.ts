@@ -91,72 +91,21 @@ describe('English Sounds Data & Classification', () => {
     });
   });
 
-  describe('University of Sheffield Phonemic Keywords Mapping', () => {
-    const sheffieldMap: Record<string, string> = {
-      // Consonants (24)
-      '/p/': 'pea',
-      '/b/': 'bee',
-      '/t/': 'tea',
-      '/d/': 'do',
-      '/k/': 'cat',
-      '/ɡ/': 'get',
-      '/f/': 'fat',
-      '/v/': 'vet',
-      '/θ/': 'thin',
-      '/ð/': 'then',
-      '/s/': 'so',
-      '/z/': 'zoo',
-      '/ʃ/': 'shoe',
-      '/ʒ/': 'leisure',
-      '/h/': 'hat',
-      '/tʃ/': 'chin',
-      '/dʒ/': 'joke',
-      '/m/': 'me',
-      '/n/': 'no',
-      '/ŋ/': 'sing',
-      '/w/': 'wet',
-      '/r/': 'red',
-      '/l/': 'lip',
-      '/j/': 'yet',
-      // Vowels - Monophthongs (12)
-      '/ɪ/': 'pit',
-      '/e/': 'pet',
-      '/æ/': 'pat',
-      '/ɒ/': 'pot',
-      '/ʊ/': 'put',
-      '/ʌ/': 'cup',
-      '/iː/': 'peep',
-      '/ɑː/': 'part',
-      '/ɔː/': 'port',
-      '/uː/': 'food',
-      '/ɜː/': 'bird',
-      '/ə/': 'about',
-      // Vowels - Diphthongs (8)
-      '/eɪ/': 'bay',
-      '/aɪ/': 'buy',
-      '/ɔɪ/': 'boy',
-      '/əʊ/': 'so',
-      '/aʊ/': 'cow',
-      '/ɪə/': 'hear',
-      '/eə/': 'hair',
-      '/ʊə/': 'pure'
-    };
+  describe('Unique Distinct Phonemic Anchor Keywords Mapping', () => {
+    it('every sound has a completely unique anchor word with zero duplicates across all 44 sounds', () => {
+      const labels = ALL_SOUNDS.map((s) => s.label.toLowerCase());
+      expect(labels).toHaveLength(44);
+      const uniqueLabels = new Set(labels);
+      expect(uniqueLabels.size).toBe(44);
+    });
 
-    it('every sound has the correct Sheffield keyword as its label', () => {
+    it('every sound includes its anchor keyword as its primary example word', () => {
       for (const sound of ALL_SOUNDS) {
-        const expectedWord = sheffieldMap[sound.ipa];
-        expect(expectedWord, `Missing expectation for ${sound.ipa}`).toBeDefined();
-        expect(sound.label).toBe(expectedWord);
+        expect(sound.exampleWords[0].toLowerCase()).toBe(sound.label.toLowerCase());
       }
     });
 
-    it('every sound includes the Sheffield keyword as its primary example word', () => {
-      for (const sound of ALL_SOUNDS) {
-        expect(sound.exampleWords[0]).toBe(sound.label);
-      }
-    });
-
-    it('every sound has word transcription from the Sheffield table', () => {
+    it('every sound has word transcription for its keyword', () => {
       for (const sound of ALL_SOUNDS) {
         expect(sound.wordIpa).toBeTruthy();
       }

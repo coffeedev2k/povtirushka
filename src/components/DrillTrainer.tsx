@@ -71,6 +71,7 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
 
   // Reveal state for card if display mode is 'symbol_then_reveal' or manual reveal
   const [isManuallyRevealed, setIsManuallyRevealed] = useState<boolean>(false);
+  const [activeSpeaker, setActiveSpeaker] = useState<'chart' | 'alex' | 'f1' | 'f2' | null>(null);
 
   // References to keep mutable values fresh inside timers and avoid stale closures
   const settingsRef = useRef<DrillSettings>(settings);
@@ -170,7 +171,8 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
           soundId,
           settingsRef.current.voiceMode,
           settingsRef.current.playWordToo,
-          controller.signal
+          controller.signal,
+          (voice) => setActiveSpeaker(voice)
         );
 
         if (controller.signal.aborted) return;
@@ -624,12 +626,26 @@ export const DrillTrainer: React.FC<DrillTrainerProps> = ({
 
           {phase === 'system_speak' && (
             <div className="flex flex-col items-center">
-              <div className="flex items-center gap-2 text-emerald-300 font-semibold text-sm sm:text-base mb-2">
+              <div className="flex flex-wrap items-center justify-center gap-2 text-emerald-300 font-semibold text-sm sm:text-base mb-2">
                 <Volume2 className="w-5 h-5 text-emerald-400 animate-bounce" />
                 <span>System pronouncing:</span>
                 <span className="font-mono font-bold text-white bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40">
                   {currentSound.ipa}
                 </span>
+                {activeSpeaker && (
+                  <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-800 text-sky-300 border border-slate-700 flex items-center gap-1 shadow-sm">
+                    <span>🎙️</span>
+                    <span>
+                      {activeSpeaker === 'alex'
+                        ? 'Alex (Male)'
+                        : activeSpeaker === 'chart'
+                        ? 'Chart (UK)'
+                        : activeSpeaker === 'f1'
+                        ? 'Female 1'
+                        : 'Female 2'}
+                    </span>
+                  </span>
+                )}
               </div>
               <div className="w-full bg-slate-700/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-emerald-500/40">
                 <div className="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full w-full animate-pulse" />

@@ -41,9 +41,15 @@ class AudioManager {
     }
   }
 
-  private getVoiceDir(voiceMode: VoiceMode): 'chart' | 'alex' | 'f1' | 'f2' {
+  private lastVoiceIndex: number = -1;
+
+  public getVoiceDir(voiceMode: VoiceMode): 'chart' | 'alex' | 'f1' | 'f2' {
     if (voiceMode === 'mix') {
-      const idx = Math.floor(Math.random() * VOICES.length);
+      let idx = Math.floor(Math.random() * VOICES.length);
+      if (idx === this.lastVoiceIndex) {
+        idx = (idx + 1) % VOICES.length;
+      }
+      this.lastVoiceIndex = idx;
       return VOICES[idx];
     }
     return voiceMode;
@@ -140,7 +146,7 @@ class AudioManager {
 
   public async playSound(
     soundId: string,
-    voiceMode: VoiceMode = 'chart'
+    voiceMode: VoiceMode = 'mix'
   ): Promise<void> {
     this.stopAll();
     const voice = this.getVoiceDir(voiceMode);
@@ -166,7 +172,8 @@ class AudioManager {
     soundId: string,
     voiceMode: VoiceMode,
     playWordToo: boolean = false,
-    signal?: AbortSignal
+    signal?: AbortSignal,
+    onVoiceChosen?: (voice: 'chart' | 'alex' | 'f1' | 'f2') => void
   ): Promise<void> {
     this.stopAll();
     const controller = new AbortController();
@@ -182,6 +189,7 @@ class AudioManager {
 
     const currentSignal = controller.signal;
     const voice = this.getVoiceDir(voiceMode);
+    onVoiceChosen?.(voice);
     const soundUrl = this.getSoundUrl(soundId, voice);
 
     try {
@@ -214,7 +222,7 @@ class AudioManager {
     soundIds: string[],
     voiceMode: VoiceMode,
     options?: {
-      onSoundStart?: (soundId: string, index: number) => void;
+      onSoundStart?: (soundId: string, index: number, voice: 'chart' | 'alex' | 'f1' | 'f2') => void;
       onSoundEnd?: (soundId: string, index: number) => void;
       onComplete?: () => void;
       pauseMs?: number;
@@ -224,17 +232,15 @@ class AudioManager {
     const controller = new AbortController();
     this.activeSequenceController = controller;
     const signal = controller.signal;
-
-    // In python script, one directory is chosen randomly for the round
-    const voice = this.getVoiceDir(voiceMode);
     const pauseMs = options?.pauseMs ?? 400;
 
     try {
       for (let i = 0; i < soundIds.length; i++) {
         if (signal.aborted) break;
         const soundId = soundIds[i];
+        const voice = this.getVoiceDir(voiceMode);
 
-        options?.onSoundStart?.(soundId, i);
+        options?.onSoundStart?.(soundId, i, voice);
         const url = this.getSoundUrl(soundId, voice);
         await this.playAudioElement(url, signal);
         options?.onSoundEnd?.(soundId, i);

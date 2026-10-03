@@ -16,9 +16,7 @@ export const ArticulationModal: React.FC<ArticulationModalProps> = ({
   onClose
 }) => {
   const [activeTab, setActiveTab] = useState<'sound' | 'mouthMap'>('sound');
-  const [selectedVoice, setSelectedVoice] = useState<'chart' | 'alex' | 'f1' | 'f2'>(
-    voiceMode === 'mix' ? 'chart' : voiceMode
-  );
+  const [selectedVoice, setSelectedVoice] = useState<VoiceMode>(voiceMode);
 
   if (!sound) return null;
 
@@ -137,7 +135,7 @@ export const ArticulationModal: React.FC<ArticulationModalProps> = ({
                 {/* Voice Selection */}
                 <div className="flex items-center gap-1.5 text-xs text-slate-400">
                   <span>Voice:</span>
-                  {(['chart', 'alex', 'f1', 'f2'] as const).map((v) => (
+                  {(['mix', 'chart', 'alex', 'f1', 'f2'] as const).map((v) => (
                     <button
                       key={v}
                       type="button"
@@ -151,7 +149,7 @@ export const ArticulationModal: React.FC<ArticulationModalProps> = ({
                           : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                       }`}
                     >
-                      {v === 'chart' ? 'Chart' : v === 'alex' ? 'Alex' : v.toUpperCase()}
+                      {v === 'mix' ? 'Mix' : v === 'chart' ? 'Chart' : v === 'alex' ? 'Alex' : v.toUpperCase()}
                     </button>
                   ))}
                 </div>

@@ -3,73 +3,73 @@ import { TrainingGroup, PresetMode } from '../types';
 export const QUIZ_GROUPS: TrainingGroup[] = [
   {
     id: 'q1',
-    name: 'Group 1: Zoo, Tea, Red',
+    name: 'Group 1: Zebra, Tiger, Red',
     description: 'Initial warm-up with distinct plosive, fricative, and approximant.',
     soundIds: ['zoo', 'tea', 'red']
   },
   {
     id: 'q2',
-    name: 'Group 2: So, Pet, Boy',
+    name: 'Group 2: Home, Desk, Coin',
     description: 'Diphthongs and short vowel practice.',
     soundIds: ['show', 'bed', 'boy']
   },
   {
     id: 'q3',
-    name: 'Group 3: Hear, Pure, Hair',
+    name: 'Group 3: Ear, Tour, Bear',
     description: 'Centering diphthongs (/ɪə/, /ʊə/, /eə/).',
     soundIds: ['here', 'cure', 'hair']
   },
   {
     id: 'q4',
-    name: 'Group 4: Put, Food, Pure',
+    name: 'Group 4: Book, Moon, Tour',
     description: 'Short /ʊ/, long /uː/, and diphthong /ʊə/.',
     soundIds: ['good', 'shoot', 'cure']
   },
   {
     id: 'q5',
-    name: 'Group 5: Pea, Bee, Cat, Tea, Do',
+    name: 'Group 5: Pizza, Baby, Coffee, Tiger, Door',
     description: 'Plosive pairs: /p/, /b/, /k/, /t/, /d/.',
     soundIds: ['pea', 'boat', 'car', 'tea', 'dog']
   },
   {
     id: 'q6',
-    name: 'Group 6: So, Leisure, Zoo, Shoe, Hat, Me',
+    name: 'Group 6: Snake, Television, Zebra, Shoe, Hat, Milk',
     description: 'Fricatives /s/, /z/, /ʃ/, /ʒ/, glottal /h/, and nasal /m/.',
     soundIds: ['see', 'television', 'zoo', 'shall', 'hat', 'man']
   },
   {
     id: 'q7',
-    name: 'Group 7: No, Sing, Lip, Red, Wet, Yet',
+    name: 'Group 7: Night, Ring, Lemon, Red, Water, Yellow',
     description: 'Nasals and approximants (/n/, /ŋ/, /l/, /r/, /w/, /j/).',
     soundIds: ['now', 'singer', 'love', 'red', 'wet', 'yes']
   },
   {
     id: 'q8',
-    name: 'Group 8: Pet, About, Bird, Port, Pure, Boy, So',
+    name: 'Group 8: Desk, Banana, Bird, Ball, Tour, Coin, Home',
     description: 'Vowels and diphthongs review.',
     soundIds: ['bed', 'teacher', 'bird', 'door', 'cure', 'boy', 'show']
   },
   {
     id: 'q9',
-    name: 'Group 9: Hear, Bay, Pure, Boy, So, Hair, Buy, Cow',
+    name: 'Group 9: Ear, Train, Tour, Coin, Home, Bear, Sky, Cloud',
     description: 'Full 8 Diphthongs challenge!',
     soundIds: ['here', 'wait', 'cure', 'boy', 'show', 'hair', 'my', 'cow']
   },
   {
     id: 'q10',
-    name: 'Group 10: Peep, Pit, Put, Food, Hear, Bay',
+    name: 'Group 10: Cheese, Fish, Book, Moon, Ear, Train',
     description: 'High front & back vowel distinctions.',
     soundIds: ['sheep', 'ship', 'good', 'shoot', 'here', 'wait']
   },
   {
     id: 'q11',
-    name: 'Group 11: Pat, Cup, Part, Pot, Hair, Buy, Cow',
+    name: 'Group 11: Apple, Sun, Star, Clock, Bear, Sky, Cloud',
     description: 'Low and back vowels plus diphthongs.',
     soundIds: ['cat', 'up', 'far', 'on', 'hair', 'my', 'cow']
   },
   {
     id: 'q12',
-    name: 'Group 12: Chin, Joke, Fat, Vet, Then, Thin',
+    name: 'Group 12: Chair, Juice, Fire, Voice, Mother, Three',
     description: 'Advanced dental fricatives and affricates.',
     soundIds: ['cheese', 'june', 'fly', 'video', 'this', 'think']
   }
@@ -84,57 +84,57 @@ export const TRAINING_GROUPS: TrainingGroup[] = [
   },
   {
     id: 't2',
-    name: 'Group 2: So, Pet, Boy',
+    name: 'Group 2: Home, Desk, Coin',
     soundIds: ['show', 'bed', 'boy']
   },
   {
     id: 't3',
-    name: 'Group 3: Put, Food, Pure',
+    name: 'Group 3: Book, Moon, Tour',
     soundIds: ['good', 'shoot', 'cure']
   },
   {
     id: 't4',
-    name: 'Group 4: Pea, Bee, Cat, Tea, Do',
+    name: 'Group 4: Pizza, Baby, Coffee, Tiger, Door',
     soundIds: ['pea', 'boat', 'car', 'tea', 'dog']
   },
   {
     id: 't5',
-    name: 'Group 5: Pat, Cup, Part, Pot, Hair, Buy, Cow',
+    name: 'Group 5: Apple, Sun, Star, Clock, Bear, Sky, Cloud',
     soundIds: ['cat', 'up', 'far', 'on', 'hair', 'my', 'cow']
   },
   {
     id: 't6',
-    name: 'Group 6: So, Leisure, Zoo, Shoe, Hat, Me',
+    name: 'Group 6: Snake, Television, Zebra, Shoe, Hat, Milk',
     soundIds: ['see', 'television', 'zoo', 'shall', 'hat', 'man']
   },
   {
     id: 't7',
-    name: 'Group 7: No, Sing, Lip, Red, Wet, Yet',
+    name: 'Group 7: Night, Ring, Lemon, Red, Water, Yellow',
     soundIds: ['now', 'singer', 'love', 'red', 'wet', 'yes']
   },
   {
     id: 't8',
-    name: 'Group 8: Hear, Pure, Hair',
+    name: 'Group 8: Ear, Tour, Bear',
     soundIds: ['here', 'cure', 'hair']
   },
   {
     id: 't9',
-    name: 'Group 9: Hear, Bay, Pure, Boy, So, Hair, Buy, Cow',
+    name: 'Group 9: Ear, Train, Tour, Coin, Home, Bear, Sky, Cloud',
     soundIds: ['here', 'wait', 'cure', 'boy', 'show', 'hair', 'my', 'cow']
   },
   {
     id: 't10',
-    name: 'Group 10: Peep, Pit, Put, Food, Hear, Bay',
+    name: 'Group 10: Cheese, Fish, Book, Moon, Ear, Train',
     soundIds: ['sheep', 'ship', 'good', 'shoot', 'here', 'wait']
   },
   {
     id: 't11',
-    name: 'Group 11: Pet, About, Bird, Port, Pure, Boy, So',
+    name: 'Group 11: Desk, Banana, Bird, Ball, Tour, Coin, Home',
     soundIds: ['bed', 'teacher', 'bird', 'door', 'cure', 'boy', 'show']
   },
   {
     id: 't12',
-    name: 'Group 12: Chin, Joke, Fat, Vet, Then, Thin',
+    name: 'Group 12: Chair, Juice, Fire, Voice, Mother, Three',
     soundIds: ['cheese', 'june', 'fly', 'video', 'this', 'think']
   }
 ];
@@ -142,50 +142,50 @@ export const TRAINING_GROUPS: TrainingGroup[] = [
 export const MINIMAL_PAIRS_GROUPS: TrainingGroup[] = [
   {
     id: 'mp1',
-    name: 'Minimal Pair: /iː/ vs /ɪ/ (peep vs pit)',
-    description: 'Crucial contrast between long close front and short lax front vowels.',
+    name: 'Contrast Pair: /iː/ vs /ɪ/ (cheese vs fish)',
+    description: 'Distinct anchor words: /iː/ in cheese vs /ɪ/ in fish.',
     soundIds: ['sheep', 'ship']
   },
   {
     id: 'mp2',
-    name: 'Minimal Pair: /ʊ/ vs /uː/ (put vs food)',
-    description: 'Short rounded vowel /ʊ/ vs long back /uː/.',
+    name: 'Contrast Pair: /ʊ/ vs /uː/ (book vs moon)',
+    description: 'Distinct anchor words: /ʊ/ in book vs /uː/ in moon.',
     soundIds: ['good', 'shoot']
   },
   {
     id: 'mp3',
-    name: 'Minimal Pair: /e/ vs /æ/ vs /ʌ/ (pet vs pat vs cup)',
-    description: 'Front open-mid /e/, front near-open /æ/, and back open-mid /ʌ/.',
+    name: 'Contrast Group: /e/ vs /æ/ vs /ʌ/ (desk vs apple vs sun)',
+    description: 'Distinct anchor words: desk, apple, and sun.',
     soundIds: ['bed', 'cat', 'up']
   },
   {
     id: 'mp4',
-    name: 'Minimal Pair: /θ/ vs /ð/ (thin vs then)',
-    description: 'Voiceless vs voiced dental fricatives.',
+    name: 'Contrast Pair: /θ/ vs /ð/ (three vs mother)',
+    description: 'Voiceless /θ/ in three vs voiced /ð/ in mother.',
     soundIds: ['think', 'this']
   },
   {
     id: 'mp5',
-    name: 'Minimal Pair: /s/ vs /z/ vs /ʃ/ vs /ʒ/',
-    description: 'Sibilants: so, zoo, shoe, leisure.',
+    name: 'Sibilants Group: /s/ vs /z/ vs /ʃ/ vs /ʒ/',
+    description: 'Distinct anchor words: snake, zebra, shoe, television.',
     soundIds: ['see', 'zoo', 'shall', 'television']
   },
   {
     id: 'mp6',
-    name: 'Minimal Pair: /tʃ/ vs /dʒ/ (chin vs joke)',
-    description: 'Affricates: voiceless vs voiced.',
+    name: 'Affricates Pair: /tʃ/ vs /dʒ/ (chair vs juice)',
+    description: 'Voiceless /tʃ/ in chair vs voiced /dʒ/ in juice.',
     soundIds: ['cheese', 'june']
   },
   {
     id: 'mp7',
-    name: 'Minimal Pair: /w/ vs /v/ (wet vs vet)',
-    description: 'Common ESL confusion: approximant /w/ vs fricative /v/.',
+    name: 'Approximant vs Fricative: /w/ vs /v/ (water vs voice)',
+    description: 'Approximant /w/ in water vs fricative /v/ in voice.',
     soundIds: ['wet', 'video']
   },
   {
     id: 'mp8',
-    name: 'Minimal Pair: /n/ vs /ŋ/ (no vs sing)',
-    description: 'Alveolar nasal /n/ vs velar nasal /ŋ/.',
+    name: 'Nasals Pair: /n/ vs /ŋ/ (night vs ring)',
+    description: 'Alveolar nasal /n/ in night vs velar nasal /ŋ/ in ring.',
     soundIds: ['now', 'singer']
   }
 ];

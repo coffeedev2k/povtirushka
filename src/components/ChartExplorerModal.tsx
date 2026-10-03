@@ -18,9 +18,7 @@ export const ChartExplorerModal: React.FC<ChartExplorerModalProps> = ({
   onClose,
   onOpenArticulation
 }) => {
-  const [selectedVoice, setSelectedVoice] = useState<'chart' | 'alex' | 'f1' | 'f2'>(
-    voiceMode === 'mix' ? 'chart' : voiceMode
-  );
+  const [selectedVoice, setSelectedVoice] = useState<VoiceMode>(voiceMode);
   const [playingSoundId, setPlayingSoundId] = useState<string | null>(null);
 
   const imageFolder = cardStyle === 'smiles' ? 'smiles' : 'chart';
@@ -62,7 +60,7 @@ export const ChartExplorerModal: React.FC<ChartExplorerModalProps> = ({
             <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
               <Volume2 className="w-3.5 h-3.5 text-sky-400" />
               <span>Voice:</span>
-              {(['chart', 'alex', 'f1', 'f2'] as const).map((v) => (
+              {(['mix', 'chart', 'alex', 'f1', 'f2'] as const).map((v) => (
                 <button
                   key={v}
                   type="button"
@@ -73,7 +71,7 @@ export const ChartExplorerModal: React.FC<ChartExplorerModalProps> = ({
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  {v === 'chart' ? 'Chart' : v === 'alex' ? 'Alex' : v.toUpperCase()}
+                  {v === 'mix' ? 'Mix' : v === 'chart' ? 'Chart' : v === 'alex' ? 'Alex' : v.toUpperCase()}
                 </button>
               ))}
             </div>
